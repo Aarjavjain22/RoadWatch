@@ -1,0 +1,11 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+/data/
+/results/
+/model/weights/
+*.db
+*.zip
+*.pt
+*.onnx

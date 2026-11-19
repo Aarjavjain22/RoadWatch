@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RoadWatch · Road intelligence</title>
+  <link rel="stylesheet" href="/static/app.css?v=3" />
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M8 3 5 21M16 3l3 18M12 4v3M12 10.5v3M12 17v3" />
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">roadwatch<span>.</span></div>
+        <div class="brand-tag">ROAD INTELLIGENCE</div>
+      </div>
+    </div>
+
+    <div class="nav-label">WORKSPACE</div>
+    <nav class="nav">
+      <a href="#/live" data-route="live">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M5.6 5.6a9 9 0 0 0 0 12.8M18.4 5.6a9 9 0 0 1 0 12.8M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"/></svg>
+        Live monitor
+      </a>
+      <a href="#/report" data-route="report">
+        <svg viewBox="0 0 24 24"><path d="M12 3 2 21h20L12 3Z"/><path d="M12 10v5M12 18h.01"/></svg>
+        Report a hazard
+      </a>
+      <a href="#/replay" data-route="replay">
+        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3V9Z"/></svg>
+        Detection replay
+      </a>
+      <a href="#/weather" data-route="weather">
+        <svg viewBox="0 0 24 24"><path d="M7 18a4 4 0 1 1 .9-7.9A5.5 5.5 0 0 1 18.5 12 3 3 0 0 1 18 18H7Z"/></svg>
+        Weather insights
+      </a>
+      <a href="#/datasets" data-route="datasets">
+        <svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>
+        Dataset &amp; records
+      </a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="model-card">
+        <div class="model-card-label">ACTIVE MODEL</div>
+        <select id="model-select" title="Detection weights in model/weights/"></select>
+        <div class="model-card-sub" id="model-sub">trained classes load on start</div>
+      </div>
+      <div class="local-badge"><span class="dot"></span> Local processing <span class="muted">v1.0</span></div>
+    </div>
+  </aside>
+
+  <main id="view"></main>
+
+  <div id="lightbox" class="lightbox hidden">
+    <button class="lightbox-close" aria-label="Close">&times;</button>
+    <img alt="Evidence frame" />
+    <div class="lightbox-caption"></div>
+  </div>
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/static/app.js?v=7"></script>
+</body>
+</html>

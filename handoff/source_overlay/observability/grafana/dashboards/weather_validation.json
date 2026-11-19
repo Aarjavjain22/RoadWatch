@@ -1,0 +1,96 @@
+{
+  "uid": "roadwatch-weather-validation",
+  "title": "RoadWatch — Weather Context & Ground-Truth Validation",
+  "tags": ["roadwatch", "weather", "validation"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-7d", "to": "now" },
+  "panels": [
+    {
+      "id": 1, "type": "stat", "title": "Weather Agent Up",
+      "gridPos": { "h": 5, "w": 6, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "short", "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "green", "value": 1 } ] } }, "overrides": [] },
+      "targets": [ { "refId": "A", "expr": "sum(weather_agent_up)", "datasource": { "type": "prometheus", "uid": "prometheus" } } ]
+    },
+    {
+      "id": 2, "type": "stat", "title": "Ground-Truth Validator Up",
+      "gridPos": { "h": 5, "w": 6, "x": 6, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "short", "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "green", "value": 1 } ] } }, "overrides": [] },
+      "targets": [ { "refId": "A", "expr": "sum(ground_truth_validator_up)", "datasource": { "type": "prometheus", "uid": "prometheus" } } ]
+    },
+    {
+      "id": 3, "type": "stat", "title": "Today's NOAA vs Agent Agreement",
+      "gridPos": { "h": 5, "w": 6, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "short", "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "green", "value": 1 } ] } }, "overrides": [] },
+      "targets": [ { "refId": "A", "expr": "ground_truth_agreement", "datasource": { "type": "prometheus", "uid": "prometheus" } } ]
+    },
+    {
+      "id": 4, "type": "stat", "title": "NOAA API Failures",
+      "gridPos": { "h": 5, "w": 6, "x": 18, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "short", "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "orange", "value": 1 } ] } }, "overrides": [] },
+      "targets": [ { "refId": "A", "expr": "noaa_api_calls_total{result=\"error\"}", "datasource": { "type": "prometheus", "uid": "prometheus" } } ]
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "Agent — Frames by Visibility Condition",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 5 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "ops" }, "overrides": [] },
+      "targets": [ { "refId": "A", "expr": "sum(rate(weather_visibility_total[5m])) by (condition)", "legendFormat": "{{condition}}", "datasource": { "type": "prometheus", "uid": "prometheus" } } ]
+    },
+    {
+      "id": 6, "type": "timeseries", "title": "Agent — Escalated Frames (cumulative)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 5 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "targets": [ { "refId": "A", "expr": "weather_escalations_total", "legendFormat": "escalations", "datasource": { "type": "prometheus", "uid": "prometheus" } } ]
+    },
+    {
+      "id": 7, "type": "table", "title": "Daily Ground-Truth Validation (NOAA vs Agent)",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 13 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "table",
+          "rawSql": "SELECT observed_date, noaa_observed_date, is_exact_date_match, noaa_condition, noaa_precip_mm, noaa_snow_mm, noaa_tmin_c, noaa_tmax_c, agent_frames_total, agent_frames_adverse, ROUND(agent_adverse_pct::numeric,3) AS agent_adverse_pct, ROUND(agent_avg_confidence_adjustment::numeric,3) AS avg_confidence_adjustment, agent_escalations, agreement, agreement_note FROM weather_ground_truth_validation ORDER BY observed_date DESC LIMIT 30",
+          "datasource": { "type": "postgres", "uid": "postgres" }
+        }
+      ]
+    },
+    {
+      "id": 8, "type": "timeseries", "title": "NOAA Precipitation & Snow (Buffalo, mm/day)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 23 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "fieldConfig": { "defaults": { "unit": "lengthmm" }, "overrides": [] },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "time_series",
+          "rawSql": "SELECT observed_date::timestamp AS time, noaa_precip_mm AS \"precipitation\", noaa_snow_mm AS \"snow\" FROM weather_ground_truth_validation ORDER BY observed_date",
+          "datasource": { "type": "postgres", "uid": "postgres" }
+        }
+      ]
+    },
+    {
+      "id": 9, "type": "timeseries", "title": "Agent Adverse-Frame % vs NOAA Condition",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 23 },
+      "datasource": { "type": "postgres", "uid": "postgres" },
+      "fieldConfig": { "defaults": { "unit": "percentunit" }, "overrides": [] },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "time_series",
+          "rawSql": "SELECT observed_date::timestamp AS time, agent_adverse_pct AS \"agent adverse %\" FROM weather_ground_truth_validation ORDER BY observed_date",
+          "datasource": { "type": "postgres", "uid": "postgres" }
+        }
+      ]
+    }
+  ]
+}

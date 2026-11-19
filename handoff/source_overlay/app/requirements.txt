@@ -1,0 +1,9 @@
+# Local UI (runs on the host, not in Docker). Install CUDA torch first for GPU inference:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+fastapi>=0.110
+uvicorn>=0.29
+python-multipart>=0.0.9
+imageio-ffmpeg>=0.5
+opencv-python>=4.8
+psycopg2-binary>=2.9.10
+ultralytics>=8.2
