@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    },
+    "type": {
+      "const": "HazardEvent",
+      "title": "Type",
+      "type": "string"
+    },
+    "hazard_id": {
+      "title": "Hazard Id",
+      "type": "string"
+    },
+    "event": {
+      "enum": [
+        "created",
+        "updated",
+        "confirmed",
+        "reported",
+        "resolved",
+        "dropped"
+      ],
+      "title": "Event",
+      "type": "string"
+    },
+    "hazard_type": {
+      "enum": [
+        "longitudinal",
+        "transverse",
+        "alligator",
+        "pothole",
+        "debris",
+        "animal",
+        "crash"
+      ],
+      "title": "Hazard Type",
+      "type": "string"
+    },
+    "lat": {
+      "maximum": 90,
+      "minimum": -90,
+      "title": "Lat",
+      "type": "number"
+    },
+    "lon": {
+      "maximum": 180,
+      "minimum": -180,
+      "title": "Lon",
+      "type": "number"
+    },
+    "uncertainty_m": {
+      "minimum": 0,
+      "title": "Uncertainty M",
+      "type": "number"
+    },
+    "n_observations": {
+      "minimum": 0,
+      "title": "N Observations",
+      "type": "integer"
+    },
+    "n_vehicles": {
+      "minimum": 0,
+      "title": "N Vehicles",
+      "type": "integer"
+    },
+    "max_confidence": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Max Confidence",
+      "type": "number"
+    },
+    "severity": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "state": {
+      "enum": [
+        "candidate",
+        "confirmed",
+        "reported",
+        "resolved",
+        "dropped"
+      ],
+      "title": "State",
+      "type": "string"
+    },
+    "street": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Street"
+    },
+    "first_seen": {
+      "format": "date-time",
+      "title": "First Seen",
+      "type": "string"
+    },
+    "last_seen": {
+      "format": "date-time",
+      "title": "Last Seen",
+      "type": "string"
+    },
+    "linked_311_case": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Linked 311 Case"
+    },
+    "transition_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Transition Id"
+    },
+    "revision": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Revision"
+    },
+    "osm_way_id": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Osm Way Id"
+    }
+  },
+  "required": [
+    "schema_version",
+    "ts",
+    "type",
+    "hazard_id",
+    "event",
+    "hazard_type",
+    "lat",
+    "lon",
+    "uncertainty_m",
+    "n_observations",
+    "n_vehicles",
+    "max_confidence",
+    "severity",
+    "state",
+    "street",
+    "first_seen",
+    "last_seen",
+    "linked_311_case"
+  ],
+  "title": "HazardEvent",
+  "type": "object"
+}

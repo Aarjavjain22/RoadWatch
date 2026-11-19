@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "VehicleState": {
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "ts": {
+          "format": "date-time",
+          "title": "Ts",
+          "type": "string"
+        },
+        "type": {
+          "const": "VehicleState",
+          "title": "Type",
+          "type": "string"
+        },
+        "vehicle_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Vehicle Id"
+        },
+        "lat": {
+          "anyOf": [
+            {
+              "maximum": 90,
+              "minimum": -90,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lat"
+        },
+        "lon": {
+          "anyOf": [
+            {
+              "maximum": 180,
+              "minimum": -180,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lon"
+        },
+        "heading_deg": {
+          "anyOf": [
+            {
+              "exclusiveMaximum": 360,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Heading Deg"
+        },
+        "speed_kph": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speed Kph"
+        },
+        "gps_accuracy_m": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Gps Accuracy M"
+        },
+        "osm_way_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Osm Way Id"
+        }
+      },
+      "required": [
+        "schema_version",
+        "ts",
+        "type"
+      ],
+      "title": "VehicleState",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    },
+    "type": {
+      "const": "FrameInput",
+      "title": "Type",
+      "type": "string"
+    },
+    "frame_id": {
+      "title": "Frame Id",
+      "type": "string"
+    },
+    "drive_id": {
+      "title": "Drive Id",
+      "type": "string"
+    },
+    "image_ref": {
+      "title": "Image Ref",
+      "type": "string"
+    },
+    "width": {
+      "exclusiveMinimum": 0,
+      "title": "Width",
+      "type": "integer"
+    },
+    "height": {
+      "exclusiveMinimum": 0,
+      "title": "Height",
+      "type": "integer"
+    },
+    "frame_index": {
+      "minimum": 0,
+      "title": "Frame Index",
+      "type": "integer"
+    },
+    "pts_s": {
+      "minimum": 0,
+      "title": "Pts S",
+      "type": "number"
+    },
+    "replay_session_id": {
+      "title": "Replay Session Id",
+      "type": "string"
+    },
+    "emitted_at": {
+      "format": "date-time",
+      "title": "Emitted At",
+      "type": "string"
+    },
+    "telemetry": {
+      "$ref": "#/$defs/VehicleState"
+    },
+    "gps_quality": {
+      "default": "unknown",
+      "enum": [
+        "matched",
+        "unmatched",
+        "unknown"
+      ],
+      "title": "Gps Quality",
+      "type": "string"
+    },
+    "weather_hour": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Weather Hour"
+    }
+  },
+  "required": [
+    "schema_version",
+    "ts",
+    "type",
+    "frame_id",
+    "drive_id",
+    "image_ref",
+    "width",
+    "height",
+    "frame_index",
+    "pts_s",
+    "replay_session_id",
+    "emitted_at",
+    "telemetry"
+  ],
+  "title": "FrameInput",
+  "type": "object"
+}

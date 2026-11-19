@@ -9,3 +9,7 @@ __pycache__/
 *.zip
 *.pt
 *.onnx
+/runs/
+/terraform/.terraform/
+*.tfstate
+*.tfstate.*

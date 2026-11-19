@@ -46,6 +46,6 @@ Scope covers local archive ingestion, public-data seeding, spatial mapping, dash
 | Contract review | Can the old weights, a GPU, and reliable camera mounting/calibration be obtained? | Record artifact provenance and compute access. If weights are unavailable, disclose the substitute baseline. If calibration is unavailable, use a fixture to test geometry and keep real low-quality locations out of automated decisions. |
 | Label audit | Are snow, rain, night or rare classes absent? | Report gaps, collect eligible data or use licensed training-only supplements. Preserve Buffalo-only held-out metrics and show support per stratum. |
 | Integration | What thresholds make sense for confirmation, clean passes, drift and confidence? | Tune against labeled development routes and freeze policies before final evaluation. With one vehicle, report independent drives separately from vehicle count. |
-| Release | Are legacy summer code and infrastructure available? | The slide deck describes them, but they are absent from this checkout. Obtain the complete teammate base and reconcile it with the archive overlay before implementation. Reuse verified legacy components. |
+| Release | Are legacy summer code and infrastructure available? | The slide deck describes them, but they are absent from this checkout. The complete teammate base arrived in the split archive. Reuse its platform and UI alongside the Buffalo schema and v1 contract. |
 
 See [architecture.md](architecture.md), [event-contract.md](event-contract.md), and [data-and-model-plan.md](data-and-model-plan.md).

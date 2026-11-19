@@ -1,0 +1,24 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    uid: prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+
+  - name: PostgreSQL
+    uid: postgres
+    type: postgres
+    access: proxy
+    url: postgres:5432
+    database: roadwatch
+    user: roadwatch
+    secureJsonData:
+      password: roadwatch
+    jsonData:
+      sslmode: disable
+      postgresVersion: 1600
+    editable: true

@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "DashboardAlert": {
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "ts": {
+          "format": "date-time",
+          "title": "Ts",
+          "type": "string"
+        },
+        "type": {
+          "const": "DashboardAlert",
+          "title": "Type",
+          "type": "string"
+        },
+        "alert_id": {
+          "title": "Alert Id",
+          "type": "string"
+        },
+        "hazard_id": {
+          "title": "Hazard Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "priority": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "title": "Priority",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "ts",
+        "type",
+        "alert_id",
+        "hazard_id",
+        "revision",
+        "priority",
+        "reason"
+      ],
+      "title": "DashboardAlert",
+      "type": "object"
+    },
+    "WarningEvent": {
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "ts": {
+          "format": "date-time",
+          "title": "Ts",
+          "type": "string"
+        },
+        "type": {
+          "const": "WarningEvent",
+          "title": "Type",
+          "type": "string"
+        },
+        "warning_id": {
+          "title": "Warning Id",
+          "type": "string"
+        },
+        "hazard_id": {
+          "title": "Hazard Id",
+          "type": "string"
+        },
+        "target_vehicle_id": {
+          "title": "Target Vehicle Id",
+          "type": "string"
+        },
+        "distance_m": {
+          "minimum": 0,
+          "title": "Distance M",
+          "type": "number"
+        },
+        "action": {
+          "enum": [
+            "MAINTAIN",
+            "CAUTION",
+            "REDUCE_SPEED",
+            "PREPARE_TO_STOP",
+            "STOP"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "urgency": {
+          "enum": [
+            "normal",
+            "high"
+          ],
+          "title": "Urgency",
+          "type": "string"
+        },
+        "reason": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reason",
+          "type": "array"
+        },
+        "source": {
+          "enum": [
+            "rules",
+            "agent"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "validated_by_rules": {
+          "const": true,
+          "title": "Validated By Rules",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "schema_version",
+        "ts",
+        "type",
+        "warning_id",
+        "hazard_id",
+        "target_vehicle_id",
+        "distance_m",
+        "action",
+        "urgency",
+        "reason",
+        "source",
+        "validated_by_rules"
+      ],
+      "title": "WarningEvent",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "DashboardAlert": "#/$defs/DashboardAlert",
+      "WarningEvent": "#/$defs/WarningEvent"
+    },
+    "propertyName": "type"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/WarningEvent"
+    },
+    {
+      "$ref": "#/$defs/DashboardAlert"
+    }
+  ]
+}

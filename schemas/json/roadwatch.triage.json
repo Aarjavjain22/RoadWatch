@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    },
+    "type": {
+      "const": "TriageDecision",
+      "title": "Type",
+      "type": "string"
+    },
+    "hazard_id": {
+      "title": "Hazard Id",
+      "type": "string"
+    },
+    "actions": {
+      "items": {
+        "enum": [
+          "ignore",
+          "watch",
+          "alert_drivers",
+          "draft_311"
+        ],
+        "type": "string"
+      },
+      "title": "Actions",
+      "type": "array"
+    },
+    "priority": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "Priority",
+      "type": "string"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "decided_by": {
+      "enum": [
+        "rules",
+        "agent",
+        "agent + rules"
+      ],
+      "title": "Decided By",
+      "type": "string"
+    },
+    "rules_changed": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Rules Changed",
+      "type": "array"
+    },
+    "needs_human_approval": {
+      "title": "Needs Human Approval",
+      "type": "boolean"
+    },
+    "decision_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Decision Id"
+    },
+    "draft_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Draft Id"
+    }
+  },
+  "required": [
+    "schema_version",
+    "ts",
+    "type",
+    "hazard_id",
+    "actions",
+    "priority",
+    "reason",
+    "decided_by",
+    "rules_changed",
+    "needs_human_approval"
+  ],
+  "title": "TriageDecision",
+  "type": "object"
+}

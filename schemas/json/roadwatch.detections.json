@@ -1,0 +1,463 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "BoxDetection": {
+      "properties": {
+        "obs_id": {
+          "title": "Obs Id",
+          "type": "string"
+        },
+        "hazard_type": {
+          "enum": [
+            "longitudinal",
+            "transverse",
+            "alligator",
+            "pothole",
+            "debris",
+            "animal",
+            "crash"
+          ],
+          "title": "Hazard Type",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "x1": {
+          "minimum": 0,
+          "title": "X1",
+          "type": "number"
+        },
+        "y1": {
+          "minimum": 0,
+          "title": "Y1",
+          "type": "number"
+        },
+        "x2": {
+          "minimum": 0,
+          "title": "X2",
+          "type": "number"
+        },
+        "y2": {
+          "minimum": 0,
+          "title": "Y2",
+          "type": "number"
+        }
+      },
+      "required": [
+        "obs_id",
+        "hazard_type",
+        "confidence",
+        "x1",
+        "y1",
+        "x2",
+        "y2"
+      ],
+      "title": "BoxDetection",
+      "type": "object"
+    },
+    "FrameInput": {
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "ts": {
+          "format": "date-time",
+          "title": "Ts",
+          "type": "string"
+        },
+        "type": {
+          "const": "FrameInput",
+          "title": "Type",
+          "type": "string"
+        },
+        "frame_id": {
+          "title": "Frame Id",
+          "type": "string"
+        },
+        "drive_id": {
+          "title": "Drive Id",
+          "type": "string"
+        },
+        "image_ref": {
+          "title": "Image Ref",
+          "type": "string"
+        },
+        "width": {
+          "exclusiveMinimum": 0,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "exclusiveMinimum": 0,
+          "title": "Height",
+          "type": "integer"
+        },
+        "frame_index": {
+          "minimum": 0,
+          "title": "Frame Index",
+          "type": "integer"
+        },
+        "pts_s": {
+          "minimum": 0,
+          "title": "Pts S",
+          "type": "number"
+        },
+        "replay_session_id": {
+          "title": "Replay Session Id",
+          "type": "string"
+        },
+        "emitted_at": {
+          "format": "date-time",
+          "title": "Emitted At",
+          "type": "string"
+        },
+        "telemetry": {
+          "$ref": "#/$defs/VehicleState"
+        },
+        "gps_quality": {
+          "default": "unknown",
+          "enum": [
+            "matched",
+            "unmatched",
+            "unknown"
+          ],
+          "title": "Gps Quality",
+          "type": "string"
+        },
+        "weather_hour": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Weather Hour"
+        }
+      },
+      "required": [
+        "schema_version",
+        "ts",
+        "type",
+        "frame_id",
+        "drive_id",
+        "image_ref",
+        "width",
+        "height",
+        "frame_index",
+        "pts_s",
+        "replay_session_id",
+        "emitted_at",
+        "telemetry"
+      ],
+      "title": "FrameInput",
+      "type": "object"
+    },
+    "FrameResult": {
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "ts": {
+          "format": "date-time",
+          "title": "Ts",
+          "type": "string"
+        },
+        "type": {
+          "const": "FrameResult",
+          "title": "Type",
+          "type": "string"
+        },
+        "frame_id": {
+          "title": "Frame Id",
+          "type": "string"
+        },
+        "vehicle_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Vehicle Id"
+        },
+        "lat": {
+          "anyOf": [
+            {
+              "maximum": 90,
+              "minimum": -90,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Lat"
+        },
+        "lon": {
+          "anyOf": [
+            {
+              "maximum": 180,
+              "minimum": -180,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Lon"
+        },
+        "status": {
+          "enum": [
+            "damaged",
+            "clean"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "n_detections": {
+          "minimum": 0,
+          "title": "N Detections",
+          "type": "integer"
+        },
+        "model_version": {
+          "title": "Model Version",
+          "type": "string"
+        },
+        "latency_ms": {
+          "minimum": 0,
+          "title": "Latency Ms",
+          "type": "number"
+        },
+        "image_ref": {
+          "title": "Image Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "ts",
+        "type",
+        "frame_id",
+        "vehicle_id",
+        "lat",
+        "lon",
+        "status",
+        "n_detections",
+        "model_version",
+        "latency_ms",
+        "image_ref"
+      ],
+      "title": "FrameResult",
+      "type": "object"
+    },
+    "VehicleState": {
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "ts": {
+          "format": "date-time",
+          "title": "Ts",
+          "type": "string"
+        },
+        "type": {
+          "const": "VehicleState",
+          "title": "Type",
+          "type": "string"
+        },
+        "vehicle_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Vehicle Id"
+        },
+        "lat": {
+          "anyOf": [
+            {
+              "maximum": 90,
+              "minimum": -90,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lat"
+        },
+        "lon": {
+          "anyOf": [
+            {
+              "maximum": 180,
+              "minimum": -180,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lon"
+        },
+        "heading_deg": {
+          "anyOf": [
+            {
+              "exclusiveMaximum": 360,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Heading Deg"
+        },
+        "speed_kph": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speed Kph"
+        },
+        "gps_accuracy_m": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Gps Accuracy M"
+        },
+        "osm_way_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Osm Way Id"
+        }
+      },
+      "required": [
+        "schema_version",
+        "ts",
+        "type"
+      ],
+      "title": "VehicleState",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    },
+    "type": {
+      "const": "DetectionBatch",
+      "title": "Type",
+      "type": "string"
+    },
+    "batch_id": {
+      "title": "Batch Id",
+      "type": "string"
+    },
+    "frame": {
+      "$ref": "#/$defs/FrameInput"
+    },
+    "model_version": {
+      "title": "Model Version",
+      "type": "string"
+    },
+    "outcome": {
+      "enum": [
+        "success",
+        "failure"
+      ],
+      "title": "Outcome",
+      "type": "string"
+    },
+    "frame_result": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FrameResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "failure_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Failure Code"
+    },
+    "detections": {
+      "items": {
+        "$ref": "#/$defs/BoxDetection"
+      },
+      "title": "Detections",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "ts",
+    "type",
+    "batch_id",
+    "frame",
+    "model_version",
+    "outcome"
+  ],
+  "title": "DetectionBatch",
+  "type": "object"
+}
