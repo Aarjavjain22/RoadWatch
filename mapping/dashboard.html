@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RoadWatch Buffalo | Hazard Review</title>
+<style>
+:root{color-scheme:dark;--bg:#111713;--panel:#19221c;--line:#304038;--ink:#f1f4ea;--muted:#a8b8ac;--green:#bcec95;--candidate:#f6c572;--confirmed:#bcec95;--resolved:#a7afff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,sans-serif}main{width:min(1370px,calc(100% - 56px));margin:0 auto;padding:36px 0 48px}
+header{display:flex;align-items:end;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:20px}h1,h2,h3,p{margin:0}h1{font-size:clamp(36px,6vw,68px);line-height:1.03;letter-spacing:-.065em}h2{font-size:20px;letter-spacing:-.02em}h3{font-size:16px}p,.muted,small{color:var(--muted)}header p{margin-top:9px}.source{text-align:right;min-width:190px}.source strong{color:var(--green)}
+.notice{padding:12px 15px;border:1px solid var(--line);background:#1e291e;border-radius:8px;margin-bottom:18px}.notice:empty{display:none}
+.layout{display:grid;grid-template-columns:minmax(0,2.15fr) minmax(280px,1fr);gap:16px}.panel{border:1px solid var(--line);background:var(--panel);border-radius:12px;overflow:hidden}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 17px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted)}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.candidate{color:var(--candidate)}.confirmed{color:var(--confirmed)}.resolved{color:var(--resolved)}.city{color:#ee9878}.dot{background:currentColor}
+.map{width:100%;display:block;aspect-ratio:1.65;background:#142019}.road{stroke:#41574a;stroke-width:1.4;fill:none}.street{font-size:13px;fill:#a3baa9;paint-order:stroke;stroke:#142019;stroke-width:4px;pointer-events:none}.pin{stroke:#111713;stroke-width:2;cursor:pointer}.pin.active,.pin:focus{stroke:#fff;stroke-width:3;outline:none}.pin.candidate{fill:var(--candidate)}.pin.confirmed{fill:var(--confirmed)}.pin.resolved{fill:var(--resolved)}.case{fill:#ee9878;fill-opacity:.68}.grid line{stroke:#283c30;stroke-width:1}.map-foot{padding:9px 17px;color:var(--muted);font-size:12px;border-top:1px solid var(--line)}
+button,select{font:inherit;color:var(--ink);background:#233128;border:1px solid #3b5043;border-radius:7px;padding:6px 9px}button{cursor:pointer;text-align:left}button:focus-visible,select:focus-visible{outline:2px solid var(--green);outline-offset:2px}.filter{display:flex;gap:8px}.details{padding:16px;min-height:145px}.details p,.details ol{margin:8px 0}.details ol{padding-left:22px}.status{text-transform:capitalize;font-weight:700}.list{display:grid;gap:6px;padding:0 16px 16px;max-height:300px;overflow:auto}.list button[aria-pressed=true]{border-color:var(--green)}.list button span{display:block;color:var(--muted);font-size:12px}.counts{font-variant-numeric:tabular-nums}
+section.frames,section.drafts{margin-top:16px}.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;padding:15px}.card{overflow:hidden;border-radius:8px;border:1px solid var(--line);background:#171e19;padding:11px}.picture{position:relative;margin:-11px -11px 8px;background:#101710;aspect-ratio:16/9}.picture img,.picture svg{position:absolute;inset:0;width:100%;height:100%}.picture img{object-fit:fill}.picture rect{fill:none;stroke:#e5fd92;stroke-width:2;vector-effect:non-scaling-stroke}.empty{padding:14px}.card code{font-size:11px;overflow-wrap:anywhere}.draft-cards .card{min-width:0}.draft-cards{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}footer{margin-top:18px;color:var(--muted);font-size:12px}
+@media(max-width:820px){main{width:calc(100% - 28px);padding-top:22px}header{align-items:start;flex-direction:column}.source{text-align:left}.layout{grid-template-columns:1fr}.map{aspect-ratio:1.35}}
+</style>
+</head>
+<body><main>
+<header><div><h1>RoadWatch Buffalo</h1><p>Road conditions, drive evidence, and 311 review</p></div><div class="source" id="source"></div></header>
+<p id="notice" class="notice"></p>
+<div class="layout">
+<section class="panel" aria-label="Buffalo hazard map">
+  <div class="panel-head"><h2>Buffalo street map</h2><div class="legend">
+  <span><i class="dot candidate"></i>Candidate</span><span><i class="dot confirmed"></i>Confirmed</span><span><i class="dot resolved"></i>Resolved</span><span><i class="dot city"></i>Public 311</span></div></div>
+  <svg id="map" class="map" viewBox="0 0 880 535" aria-label="Street map with selectable hazard pins"></svg>
+  <div id="map-foot" class="map-foot"></div>
+</section>
+<section class="panel" aria-label="Hazard list and details">
+  <div class="panel-head"><h2>Hazard pins</h2><div class="filter"><select id="dataset" aria-label="Evidence source"><option value="">All sources</option></select><select id="state" aria-label="Lifecycle state"><option value="">All states</option><option>candidate</option><option>confirmed</option><option>resolved</option></select></div></div>
+  <div class="details" id="details" aria-live="polite"></div><div class="list" id="list"></div>
+</section>
+</div>
+<section class="panel frames"><div class="panel-head"><h2>Frame evidence</h2><small id="frame-count"></small></div><div class="cards" id="frames"></div></section>
+<section class="panel drafts"><div class="panel-head"><h2>311 draft review</h2><small>Human approval required</small></div><div class="cards draft-cards" id="drafts"></div></section>
+<footer>Road geometry © OpenStreetMap contributors · Public service requests from Open Data Buffalo · Exported for offline review</footer>
+</main>
+<script>
+(() => {
+'use strict';
+const data = /*BUFFALO_DATA*/;
+const byId = id => document.getElementById(id);
+const el = (tag, value, className) => {
+  const node = document.createElement(tag);
+  if (value !== undefined) node.textContent = value;
+  if (className) node.className = className;
+  return node;
+};
+const svg = (tag, props) => {
+  const node = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [name, value] of Object.entries(props)) node.setAttribute(name, value);
+  return node;
+};
+const display = value => ({'meeting-fixture':'Simulated lifecycle', 'buffalo-eval':'Buffalo video',field:'Field drive'})[value] || value;
+const dataset = byId('dataset'), state = byId('state');
+for (const value of new Set([...data.hazards, ...data.frames].map(row => row.dataset))) {
+  const option = el('option', display(value)); option.value = value; dataset.append(option);
+}
+if (data.frames.some(f => f.dataset === 'buffalo-eval'))
+  byId('notice').textContent = 'Buffalo road imagery and detections are from the supplied evaluation. Their map locations follow an illustrative route. The lifecycle and draft examples use simulated drives.';
+else if (data.frames.some(f => f.location_source === 'route_estimate'))
+  byId('notice').textContent = 'Some frames use estimated route positions. Those positions can create candidate pins only.';
+const b = data.baseline_counts;
+byId('source').append(el('strong', (b.roads || 0).toLocaleString() + ' public road segments'), el('p', ((b.city_311_road_requests || 0) + (b.city_311_potholes_hist || 0)).toLocaleString() + ' public 311 records'));
+const [south, west, north, east] = data.bounds;
+const scale = Math.min(820/((east-west)*.73), 475/(north-south));
+const xy = (lat,lon) => [440+(lon-(west+east)/2)*.73*scale,267.5-(lat-(south+north)/2)*scale];
+const map = byId('map'), roads = svg('g',{}), dots = svg('g',{}), pins = svg('g',{}), labels = svg('g',{});
+const grid = svg('g',{class:'grid'});
+for(let x=0;x<=880;x+=55)grid.append(svg('line',{x1:x,x2:x,y1:0,y2:535}));
+for(let y=0;y<=535;y+=55)grid.append(svg('line',{x1:0,x2:880,y1:y,y2:y}));
+map.append(grid, roads, dots, labels, pins);
+const named = new Set();
+for(const road of data.roads){
+  if (!road.line.length) continue;
+  roads.append(svg('polyline',{class:'road',points:road.line.map(([lon,lat])=>xy(lat,lon).join(',')).join(' ')}));
+  if(road.street && !named.has(road.street) && (named.size<7 || road.street==='Main Street')){
+    const [lon,lat]=road.line[Math.floor(road.line.length/2)], [x,y]=xy(lat,lon);
+    if(x<36||x>805||y<20||y>510)continue;
+    const label=svg('text',{x:x+5,y:y-5,class:'street'});label.textContent=road.street;labels.append(label);named.add(road.street);
+  }
+}
+for(const report of data.cases){
+  const [cx,cy]=xy(report.lat,report.lon);
+  const dot=svg('circle',{cx,cy,r:3.1,class:'case'});
+  const title=svg('title',{});title.textContent='311 '+report.case_number+' · '+report.status;dot.append(title);dots.append(dot);
+}
+byId('map-foot').textContent=data.roads.length+' road segments and '+data.cases.length+' mapped pothole reports in this view';
+let selected;
+const order = {confirmed:0,resolved:1,candidate:2};
+function renderPins() {
+  const visible=data.hazards.filter(p=>(!dataset.value||p.dataset===dataset.value)&&(!state.value||p.state===state.value))
+    .sort((a,b)=>order[a.state]-order[b.state] || b.n_observations-a.n_observations);
+  if(!visible.some(p=>p.id===selected)) selected=visible[0]?.id;
+  pins.replaceChildren();byId('list').replaceChildren();byId('details').replaceChildren();
+  for(const p of visible){
+    const [cx,cy]=xy(...p.point), name=(p.street||'Unnamed road')+' · '+p.hazard_type;
+    const dot=svg('circle',{cx,cy,r:8,class:'pin '+p.state+(p.id===selected?' active':''),tabindex:0,role:'button','aria-label':name+', '+p.state});
+    const select=()=>{selected=p.id;renderPins();};
+    dot.addEventListener('click',select);
+    dot.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select();byId('list').querySelector('[aria-pressed="true"]')?.focus();}});
+    pins.append(dot);
+    const button=el('button',name);button.setAttribute('aria-pressed',p.id===selected);button.append(el('span',p.state+' · '+display(p.dataset)));
+    button.addEventListener('click',()=>{select();byId('list').querySelector('[aria-pressed="true"]')?.focus();});byId('list').append(button);
+    if(p.id===selected){
+      const details=byId('details');
+      details.append(el('span',p.state,'status '+p.state),el('h3',name),el('p',display(p.dataset)+' · '+p.method+' · ±'+p.uncertainty_m+' m'),
+        el('p',p.n_observations+' sightings · '+p.n_drives+' qualifying drives · '+p.n_clean_drives+' clean passes'));
+      if(p.linked_311_case)details.append(el('p','Existing 311 case '+p.linked_311_case));
+      const history=el('ol');for(const h of p.history)history.append(el('li',h.state));details.append(history);
+    }
+  }
+  if(!visible.length)byId('details').append(el('p','No pins match these filters.'));
+}
+function renderEvidence() {
+  const shown=data.frames.filter(f=>!dataset.value||f.dataset===dataset.value);
+  const thumbnails=shown.filter(f=>f.thumbnail);
+  byId('frame-count').textContent=shown.length+' frames · '+shown.reduce((sum,f)=>sum+f.detection_count,0)+' detections';
+  const evidence=byId('frames');evidence.replaceChildren();
+  for(const f of (thumbnails.length?thumbnails:shown).slice(0,12)){
+    const card=el('article',undefined,'card');
+    if(f.thumbnail){
+      const image=el('div',undefined,'picture'), img=el('img');img.src=f.thumbnail;img.alt='Coarse road-scene preview';
+      const overlay=svg('svg',{viewBox:'0 0 '+f.width+' '+f.height,preserveAspectRatio:'none','aria-hidden':'true'});
+      for(const d of data.detections.filter(d=>d.frame_id===f.id&&d.bbox.length===4)){
+        const [x,y,right,bottom]=d.bbox;overlay.append(svg('rect',{x,y,width:right-x,height:bottom-y}));
+      }
+      image.append(img,overlay);card.append(image);
+    }
+    card.append(el('h3',f.street||display(f.dataset)),el('p',f.offset_s.toFixed(1)+' s into clip · '+f.detection_count+' detections'),el('small',f.location_source.replaceAll('_',' ')));evidence.append(card);
+  }
+  if(!shown.length)evidence.append(el('p','No frame evidence for this source.'));
+  const drafts=byId('drafts');drafts.replaceChildren();
+  for(const d of data.drafts.filter(d=>!dataset.value||d.dataset===dataset.value)){
+    const card=el('article',undefined,'card');
+    card.append(el('h3',d.street||'Unnamed road'),el('small',display(d.dataset)+' · '+d.status.replaceAll('_',' ')),
+      el('p',d.description),el('p',d.observation_count+' sightings · ±'+d.uncertainty_m+' m'),el('code',d.id));
+    drafts.append(card);
+  }
+  if(!drafts.children.length)drafts.append(el('p','No drafts for this source.'));
+}
+dataset.addEventListener('change',()=>{renderPins();renderEvidence();});state.addEventListener('change',renderPins);
+renderPins();renderEvidence();
+})();
+</script>
+</body>
+</html>

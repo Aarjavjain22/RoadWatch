@@ -142,6 +142,22 @@
           ],
           "default": null,
           "title": "Weather Hour"
+        },
+        "location_source": {
+          "default": "unknown",
+          "enum": [
+            "gps",
+            "interpolated",
+            "route_estimate",
+            "unknown"
+          ],
+          "title": "Location Source",
+          "type": "string"
+        },
+        "clock_known": {
+          "default": false,
+          "title": "Clock Known",
+          "type": "boolean"
         }
       },
       "required": [

@@ -58,6 +58,8 @@ class FrameInput(Event):
     telemetry: VehicleState
     gps_quality: Literal["matched", "unmatched", "unknown"] = "unknown"
     weather_hour: UtcDatetime | None = None
+    location_source: Literal["gps", "interpolated", "route_estimate", "unknown"] = "unknown"
+    clock_known: bool = False
 
 
 class FrameResult(Event):

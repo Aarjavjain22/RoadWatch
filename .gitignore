@@ -13,3 +13,15 @@ __pycache__/
 /terraform/.terraform/
 *.tfstate
 *.tfstate.*
+/demo-output/
+*.mp4
+*.mov
+*.m4v
+*.mkv
+*.avi
+*.webm
+*.mts
+*.gpx
+*.nmea
+*.sqlite
+*.sqlite3
